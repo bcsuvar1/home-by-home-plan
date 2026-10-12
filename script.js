@@ -267,8 +267,8 @@ function initBooking() {
   const mail = `mailto:balazs.csuvar@dgcities.com?subject=${subject}&body=${body}`;
   $('booking-body').innerHTML = `<div class="booking-fallback">
     ${BOOKING_URL ? `<a class="book-btn" href="${esc(BOOKING_URL)}" target="_blank" rel="noopener">Choose a time →</a>
-    <ul class="book-facts"><li>30 minutes</li><li>Google Meet link sent on booking</li><li>Confirmation by email</li></ul>
-    <p>Opens our booking calendar in a new tab. Prefer email? <a href="${mail}">Request a demo</a></p>`
+    <ul class="book-facts"><li>30 minutes</li></ul>
+    <p>Prefer email? <a href="${mail}">Request a demo</a></p>`
     : `<a class="book-btn" href="${mail}">Request a demo</a><p>Send us a few times that suit you and we'll confirm a slot.</p>`}
   </div>`;
 }
