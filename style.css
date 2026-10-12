@@ -185,7 +185,7 @@ b{font-weight:600}
 .booking-kicker{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:var(--dg-lime);color:var(--dg-green);padding:3px 10px;border-radius:20px;margin-bottom:10px}
 .booking-head h3{font-size:22px;color:var(--dg-green)}
 .booking-head p{margin:6px 0 0;font-size:15px;color:var(--muted)}
-.booking-body iframe{display:block;width:100%;height:620px;border:0}
+.booking-body iframe{display:block;width:100%;height:780px;border:0}
 .booking-fallback{padding:30px 26px;text-align:center}
 .book-btn{display:inline-block;font:600 17px 'Poppins',sans-serif;background:var(--dg-green);color:var(--dg-lime);text-decoration:none;border-radius:40px;padding:15px 38px;transition:transform .2s}
 .book-btn:hover{transform:translateY(-2px)}

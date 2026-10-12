@@ -259,7 +259,7 @@ function initScroll() {
 
 // Google Calendar appointment schedule (Calendar → Create → Appointment schedule → Share → booking page link).
 // Leave empty to show the email fallback instead of the embedded calendar.
-const BOOKING_URL = '';
+const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ2u5bSPeLjw158a2bEWRW1mihQay85XDCoaeHUPd9tW4hH0qKm2w16NLmc9puKygMZkzSzzK2VJ';
 
 function initBooking() {
   const host = $('booking-body');
