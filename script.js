@@ -258,21 +258,19 @@ function initScroll() {
 }
 
 // Google Calendar appointment schedule (Calendar → Create → Appointment schedule → Share → booking page link).
-// Leave empty to show the email fallback instead of the embedded calendar.
-const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ2u5bSPeLjw158a2bEWRW1mihQay85XDCoaeHUPd9tW4hH0qKm2w16NLmc9puKygMZkzSzzK2VJ';
+// It opens in its own tab: embedded, browsers' tracking protection blocks the cookies Google's booking step needs.
+const BOOKING_URL = 'https://calendar.app.google/XcGjXbairqFgTYJh7';
 
 function initBooking() {
-  const host = $('booking-body');
-  if (BOOKING_URL) {
-    const src = BOOKING_URL + (BOOKING_URL.includes('?') ? '&' : '?') + 'gv=true';
-    host.innerHTML = `<iframe src="${esc(src)}" title="Book a demo with DG Cities" loading="lazy"></iframe>`;
-    return;
-  }
   const subject = encodeURIComponent('Home by Home plan: demo request');
   const body = encodeURIComponent('Hello,\n\nI would like to book a demo of the Home by Home plan.\n\nOrganisation:\nSuggested times:\n\nThanks');
-  host.innerHTML = `<div class="booking-fallback">
-    <a class="book-btn" href="mailto:balazs.csuvar@dgcities.com?subject=${subject}&body=${body}">Request a demo</a>
-    <p>Send us a few times that suit you and we'll confirm a slot.</p></div>`;
+  const mail = `mailto:balazs.csuvar@dgcities.com?subject=${subject}&body=${body}`;
+  $('booking-body').innerHTML = `<div class="booking-fallback">
+    ${BOOKING_URL ? `<a class="book-btn" href="${esc(BOOKING_URL)}" target="_blank" rel="noopener">Choose a time →</a>
+    <ul class="book-facts"><li>30 minutes</li><li>Google Meet link sent on booking</li><li>Confirmation by email</li></ul>
+    <p>Opens our booking calendar in a new tab. Prefer email? <a href="${mail}">Request a demo</a></p>`
+    : `<a class="book-btn" href="${mail}">Request a demo</a><p>Send us a few times that suit you and we'll confirm a slot.</p>`}
+  </div>`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -189,7 +189,9 @@ b{font-weight:600}
 .booking-fallback{padding:30px 26px;text-align:center}
 .book-btn{display:inline-block;font:600 17px 'Poppins',sans-serif;background:var(--dg-green);color:var(--dg-lime);text-decoration:none;border-radius:40px;padding:15px 38px;transition:transform .2s}
 .book-btn:hover{transform:translateY(-2px)}
-.booking-fallback p{margin:14px 0 0;font-size:14px;color:var(--muted)}.foot{max-width:1080px;margin:90px auto 0;padding:28px 0 40px;border-top:1px solid rgba(255,255,255,.15);font-size:12.5px;color:#9FC0B4}
+.booking-fallback p{margin:14px 0 0;font-size:14px;color:var(--muted)}.book-facts{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.book-facts li{font-size:13px;background:var(--green-pale);color:var(--green);border-radius:20px;padding:4px 12px}
+.booking-fallback p a{color:var(--dg-green);font-weight:600}.foot{max-width:1080px;margin:90px auto 0;padding:28px 0 40px;border-top:1px solid rgba(255,255,255,.15);font-size:12.5px;color:#9FC0B4}
 
 /* ── Responsive ───────────────────────────── */
 @media (max-width:900px){
