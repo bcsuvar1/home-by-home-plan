@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home by Home Plan</title>
+<meta name="description" content="From reactive repairs to planned, evidenced investment. The Home by Home plan from DG Cities, for social housing asset managers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══════════════ SCENES 1–2: SQUEEZE → ANALYSIS LAYER ═══════════════ -->
+<section class="stage-act" id="actA">
+  <div class="stage" id="stageA" data-state="intro">
+    <div class="fragments" id="fragments" aria-hidden="true"></div>
+    <div class="engine" aria-hidden="true">
+      <div class="engine-core"><span>DG Cities</span><b>Analysis engine</b></div>
+      <div class="engine-ring"></div>
+    </div>
+    <div class="counter" id="counter">
+      <div class="counter-label">Reactive repairs logged per year</div>
+      <div class="counter-val" id="counter-val">0</div>
+      <div class="counter-sub" id="counter-sub"></div>
+    </div>
+    <div class="dash" id="dash" aria-hidden="true">
+      <div class="dash-chrome"><span class="dots"><i></i><i></i><i></i></span>Home by Home · Intelligence Portal</div>
+      <div class="dash-body hbh">
+        <div class="dash-kpis" id="dash-kpis"></div>
+        <div class="dash-row">
+          <div class="dash-card"><div class="card-title">Priority by asset group</div><div id="dash-bars"></div></div>
+          <div class="dash-card"><div class="card-title">Works programme</div><div id="dash-prog"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps steps-a">
+    <div class="intro">
+      <div class="kicker">DG Cities · Home by Home</div>
+      <h1>Plan, prioritise and prove every pound of capital investment</h1>
+    </div>
+    <div class="step" data-step="chaos">
+      <h2>The asset management squeeze</h2>
+      <p>Social housing asset managers face unprecedented pressure to provide safe homes while navigating rapid cost inflation, shrinking budgets and complex decarbonisation targets.</p>
+    </div>
+    <div class="step" data-step="count">
+      <p>You are expected to meet the Decent Homes Standard and Awaab's Law, but your data is often siloed and difficult to act on.</p>
+      <p class="hint">In one London borough's stock, reactive repairs rose by <b id="rise-pct"></b> in two years.</p>
+    </div>
+    <div class="step" data-step="funnel">
+      <h2>An analysis layer, not another database</h2>
+      <p>You don't need another database to manage. You need an analysis layer that makes your existing data work for you.</p>
+    </div>
+    <div class="step" data-step="dash">
+      <p>The Home by Home plan ingests your stock condition surveys, repair histories, EPC data and tenant satisfaction scores.</p>
+      <p>It sits on top of your current asset management system, cleans anomalies, and gives your teams real, easy-to-interpret outputs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SCENES 3–5: THE THREE LEVELS ═══════════════ -->
+<section class="levels-intro">
+  <div class="kicker dark">Three levels of value</div>
+  <div class="level-pills">
+    <a href="#lvl1"><b>1</b>Strategic investment planning</a>
+    <a href="#lvl2"><b>2</b>Preventive maintenance</a>
+    <a href="#lvl3"><b>3</b>Evaluation &amp; impact</a>
+  </div>
+</section>
+
+<section class="scrolly" id="actB">
+  <div class="graphic">
+    <div class="frame" id="frameB" data-state="map-base">
+      <div class="chrome">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="chrome-title">Home by Home · Intelligence Portal</span>
+        <span class="chrome-tab" id="tabB">Programme builder</span>
+      </div>
+      <div class="frame-stage hbh">
+        <!-- Level 1: traffic-light map -->
+        <div class="panel" id="p-map">
+          <div class="card fill map-card">
+            <div id="am-map" class="map"></div>
+            <div class="prog-legend" id="prog-legend"></div>
+          </div>
+        </div>
+        <!-- Level 2: repair mix + passport -->
+        <div class="panel" id="p-estate">
+          <div class="estate">
+            <div class="card estate-bars">
+              <div class="card-title">Repairs per home by asset group · one estate, 3 years</div>
+              <div id="est-bars"></div>
+              <div class="est-legend" id="est-legend"></div>
+              <div class="est-hint">Hover or tap a bar to open its Property Passport</div>
+            </div>
+            <div class="card passport" id="passport"></div>
+          </div>
+        </div>
+        <!-- Level 3: evaluation -->
+        <div class="panel" id="p-eval">
+          <div class="eval">
+            <div class="eval-kpis" id="eval-kpis"></div>
+            <div class="card eval-chart">
+              <div class="card-title">Capital investment and reactive repair cost <span class="tag">Illustrative profile</span></div>
+              <svg id="eval-svg" viewBox="0 0 600 260" preserveAspectRatio="xMidYMid meet" aria-label="Illustrative chart: a spike in capital investment is followed by a sustained drop in reactive repair costs"></svg>
+              <div class="eval-key"><span><i style="background:var(--dg-green)"></i>Capital investment</span><span><i style="background:#C95C3A"></i>Reactive repair cost</span></div>
+            </div>
+            <div class="checks" id="checks"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="map-base" id="lvl1">
+      <div class="lvl">Level 1</div>
+      <h2>Strategic investment planning</h2>
+      <p>Move from reactive spending to proactive capital allocation.</p>
+    </div>
+    <div class="step" data-step="map-red">
+      <p>We set rules-based criteria to decide exactly which properties need which works, from window replacements to roof repairs.</p>
+      <p class="hint"><span class="sw red"></span>Red: urgent works, where a poor EPC combines with frequent repairs.</p>
+    </div>
+    <div class="step" data-step="map-amber">
+      <p>That lets you define short, medium and long-term funding programmes…</p>
+      <p class="hint"><span class="sw amber"></span>Amber: medium-term programme.</p>
+    </div>
+    <div class="step" data-step="map-green">
+      <p>…aligned with your strategic priorities and available budgets.</p>
+      <p class="hint"><span class="sw green"></span>Green: long-term, planned cycle.</p>
+    </div>
+
+    <div class="step" data-step="estate" id="lvl2">
+      <div class="lvl">Level 2</div>
+      <h2>Preventive maintenance</h2>
+      <p>Reduce expensive reactive callouts by understanding the root causes of failure.</p>
+      <p>We use AI to analyse tens of thousands of historical repair logs, categorising the underlying issues to build a real-life picture of your homes.</p>
+    </div>
+    <div class="step" data-step="passport">
+      <p>The outputs give clear summaries of recurring problems at both the asset group level and the individual property level.</p>
+      <p class="hint">Each home gets a Property Passport: its repair history, its energy rating and the risks that follow from them.</p>
+    </div>
+
+    <div class="step" data-step="eval" id="lvl3">
+      <div class="lvl">Level 3</div>
+      <h2>Evaluation &amp; tracking impact</h2>
+      <p>Prove the return on your interventions.</p>
+      <p>Our analysis is not a static report. It is an iterative, long-term process.</p>
+    </div>
+    <div class="step" data-step="eval-drop">
+      <p>As upgrades are completed and new data flows in, the plan updates itself, so you can track the real impact of your capital spending and see which interventions were most cost-effective.</p>
+      <p class="hint">Shown here: early results from a completed retrofit programme.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SCENE 6: CALL TO ACTION ═══════════════ -->
+<section class="cta-scene" id="contact">
+  <div class="cta-inner">
+    <h2>Built for the realities on the ground</h2>
+    <p class="cta-lede">Our model is flexible by design. It takes into account the realities on the ground, using the datasets you actually have to deliver real, practical results.</p>
+    <p class="cta-q">Ready to transform how you plan, prioritise and deliver improvements? Book a demo.</p>
+
+    <div class="cta-grid">
+      <div class="people">
+        <div class="person">
+          <div class="avatar">BC</div>
+          <div><b>Balazs Csuvar</b><span>DG Cities</span><a href="mailto:balazs.csuvar@dgcities.com">balazs.csuvar@dgcities.com</a></div>
+        </div>
+        <div class="person">
+          <div class="avatar">RS</div>
+          <div><b>Rasheed Sokunbi</b><span>DG Cities</span></div>
+        </div>
+        <a class="site-link" href="https://www.dgcities.com" target="_blank" rel="noopener">dgcities.com →</a>
+      </div>
+      <div class="booking" id="booking">
+        <div class="booking-head">
+          <div class="booking-kicker">Book a demo</div>
+          <h3>See the Home by Home plan on your own stock</h3>
+          <p>A 30-minute walkthrough with the team. Pick a time that suits you.</p>
+        </div>
+        <div class="booking-body" id="booking-body"></div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot">
+    <p>Data shown is from a London borough's housing stock, April 2023 – March 2026, with asset groups and homes anonymised. Map points are placed at block level. Evaluation figures are early results from a completed retrofit programme where monitoring is ongoing; the investment and repair cost chart is an illustrative profile.</p>
+    <p>© DG Cities</p>
+  </footer>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
+<script src="am_data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
