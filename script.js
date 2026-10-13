@@ -280,6 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initEstate();
   initEval();
   initBooking();
+  new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); o.disconnect(); } }),
+    {threshold: .25}).observe($('results'));
   initScroll();
   window.addEventListener('resize', () => amMap && amMap.invalidateSize());
 });
