@@ -273,19 +273,13 @@ function initBooking() {
   </div>`;
 }
 
-function initHealthPopup() {
-  const pop = $('hpop'), quote = document.querySelector('.quote');
-  let closed = false;
-  try { closed = sessionStorage.getItem('hpop-closed') === '1'; } catch (e) {}
-  if (!pop || !quote || closed) return;
-  pop.hidden = false;
+function initXlink() {
+  const card = document.querySelector('.xlink');
+  if (!card) return;
+  if (!('IntersectionObserver' in window)) { card.classList.add('on'); return; }
   new IntersectionObserver((es, o) => es.forEach(e => {
-    if (e.isIntersecting) { pop.classList.add('show'); o.disconnect(); }
-  }), {threshold: .6}).observe(quote);
-  $('hpop-x').addEventListener('click', () => {
-    pop.classList.remove('show');
-    try { sessionStorage.setItem('hpop-closed', '1'); } catch (e) {}
-  });
+    if (e.isIntersecting) { card.classList.add('on'); o.disconnect(); }
+  }), {threshold: .3}).observe(card);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -298,6 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
   new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); o.disconnect(); } }),
     {threshold: .25}).observe($('results'));
   initScroll();
-  initHealthPopup();
+  initXlink();
   window.addEventListener('resize', () => amMap && amMap.invalidateSize());
 });
