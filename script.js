@@ -273,6 +273,21 @@ function initBooking() {
   </div>`;
 }
 
+function initHealthPopup() {
+  const pop = $('hpop'), quote = document.querySelector('.quote');
+  let closed = false;
+  try { closed = sessionStorage.getItem('hpop-closed') === '1'; } catch (e) {}
+  if (!pop || !quote || closed) return;
+  pop.hidden = false;
+  new IntersectionObserver((es, o) => es.forEach(e => {
+    if (e.isIntersecting) { pop.classList.add('show'); o.disconnect(); }
+  }), {threshold: .6}).observe(quote);
+  $('hpop-x').addEventListener('click', () => {
+    pop.classList.remove('show');
+    try { sessionStorage.setItem('hpop-closed', '1'); } catch (e) {}
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initFragments();
   initDash();
@@ -283,5 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
   new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); o.disconnect(); } }),
     {threshold: .25}).observe($('results'));
   initScroll();
+  initHealthPopup();
   window.addEventListener('resize', () => amMap && amMap.invalidateSize());
 });
