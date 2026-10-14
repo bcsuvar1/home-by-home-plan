@@ -190,6 +190,16 @@ b{font-weight:600}
 .oc-icon{width:34px;height:34px;color:var(--dg-green-2)}
 .oc-title{font-size:18px;font-weight:600;color:var(--dg-green);line-height:1.25}
 .oc-text{font-size:14px;color:var(--muted);line-height:1.5}
+.quote{margin:72px 0 0;padding:0 0 0 32px;border-left:4px solid var(--dg-lime);max-width:900px}
+.quote blockquote{margin:0;font-size:clamp(19px,2vw,24px);line-height:1.5;font-weight:500;color:var(--dg-green)}
+.quote figcaption{margin-top:20px;display:flex;flex-direction:column;font-size:15px;color:var(--muted)}
+.quote figcaption b{color:var(--ink);font-weight:600}
+.related{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px;margin-top:56px;padding:22px 28px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(3,83,65,.08);text-decoration:none;color:var(--ink);transition:transform .2s,box-shadow .2s}
+.related:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(3,83,65,.14)}
+.related-kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--dg-lime);color:var(--dg-green);padding:4px 12px;border-radius:20px;white-space:nowrap}
+.related-text{font-size:16px;line-height:1.5}
+.related-go{font-weight:600;color:var(--dg-green);white-space:nowrap}
+@media (max-width:700px){.quote{padding-left:20px}.related{grid-template-columns:1fr;gap:12px;justify-items:start}}
 /* ── Scene 6 ───────────────────────────── */
 .cta-scene{background:var(--dg-green);color:#fff;padding:130px 24px 0;margin-top:10vh}
 .cta-inner{max-width:1080px;margin:0 auto}
