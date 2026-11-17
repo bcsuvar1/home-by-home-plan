@@ -25,6 +25,13 @@
       <div class="counter-val" id="counter-val">0</div>
       <div class="counter-sub" id="counter-sub"></div>
     </div>
+    <!-- control panel: existing systems → one record per home → the questions it answers (built by script.js) -->
+    <div class="cpanel" id="cpanel" aria-hidden="true">
+      <div class="cp-col cp-in"><div class="cp-h">Your existing systems</div><div id="cp-in"></div></div>
+      <div class="cp-col cp-mid"><div class="cp-hub" id="cp-hub"></div></div>
+      <div class="cp-col cp-out"><div class="cp-h">The questions it answers</div><div id="cp-out"></div></div>
+      <svg class="cp-wires" id="cp-wires"></svg>
+    </div>
     <div class="dash" id="dash" aria-hidden="true">
       <div class="dash-chrome"><span class="dots"><i></i><i></i><i></i></span>Home by Home · Intelligence Portal</div>
       <div class="dash-body hbh">
@@ -52,11 +59,12 @@
     </div>
     <div class="step" data-step="funnel">
       <h2>An analysis layer, not another database</h2>
-      <p>You don't need another database to manage. You need an analysis layer that makes your existing data work for you.</p>
+      <p>We build intelligence over the systems you already run. We don't replace them: your housing management, repairs and asset management systems stay exactly as they are.</p>
+      <p>The Home by Home plan connects what they already hold (stock condition surveys, repair histories, EPCs, tenancy and void records), checks it, and joins it into one record per home.</p>
     </div>
     <div class="step" data-step="dash">
-      <p>The Home by Home plan ingests your stock condition surveys, repair histories, EPC data and tenant satisfaction scores.</p>
-      <p>It sits on top of your current asset management system, cleans anomalies, and gives your teams real, easy-to-interpret outputs.</p>
+      <p>The aim is an organisation that knows how to use its data, and how to act on it.</p>
+      <p>Every team gets answers to the same three questions: <b>where to invest more effectively</b>, <b>what trends the data is pointing at</b>, and <b>how services can be delivered more impactfully</b>.</p>
     </div>
   </div>
 </section>
@@ -87,6 +95,20 @@
             <div class="prog-legend" id="prog-legend"></div>
           </div>
         </div>
+        <!-- Level 1 (end): the investment plan, by year and by reason -->
+        <div class="panel" id="p-plan">
+          <div class="plan">
+            <div class="card plan-years">
+              <div class="card-title">Spend by year and type of work <span class="tag" id="plan-budget"></span></div>
+              <div id="plan-bars"></div>
+              <div class="est-legend" id="plan-legend"></div>
+            </div>
+            <div class="card plan-flow">
+              <div class="card-title" id="plan-flow-title">Where the money goes, and what it buys</div>
+              <svg id="plan-svg" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" aria-label="Flow from the reasons work is funded to the types of work it buys"></svg>
+            </div>
+          </div>
+        </div>
         <!-- Level 2: repair mix + passport -->
         <div class="panel" id="p-estate">
           <div class="estate">
@@ -97,6 +119,13 @@
               <div class="est-hint">Hover or tap a bar to open its Property Passport</div>
             </div>
             <div class="card passport" id="passport"></div>
+          </div>
+        </div>
+        <!-- Level 2 (end): repair rates by component, and the savings capital works bring -->
+        <div class="panel" id="p-prevent">
+          <div class="prevent">
+            <div class="card prev-rates"><div class="card-title" id="rates-title">Expected repairs by type, against the council rate</div><div id="rates"></div></div>
+            <div class="card prev-save"><div class="card-title">Capital works that pay for themselves</div><div id="savings"></div></div>
           </div>
         </div>
         <!-- Level 3: evaluation -->
@@ -133,6 +162,14 @@
       <p>…aligned with your strategic priorities and available budgets.</p>
       <p class="hint"><span class="sw green"></span>Green: long-term, planned cycle.</p>
     </div>
+    <div class="step" data-step="plan-years">
+      <p>The result is a costed investment plan: what a budget buys each year, by type of work, against the work falling due.</p>
+      <p class="hint" id="hint-plan-years"></p>
+    </div>
+    <div class="step" data-step="plan-flow">
+      <p>Every pound has a reason: a Decent Homes failure, a component past its replacement year, high priority capital work, or a home whose repair spend is forecast to keep rising.</p>
+      <p class="hint" id="hint-plan-flow"></p>
+    </div>
 
     <div class="step" data-step="estate" id="lvl2">
       <div class="lvl">Level 2</div>
@@ -143,6 +180,14 @@
     <div class="step" data-step="passport">
       <p>The outputs give clear summaries of recurring problems at both the asset group level and the individual property level.</p>
       <p class="hint">Each home gets a Property Passport: its repair history, its energy rating and the risks that follow from them.</p>
+    </div>
+    <div class="step" data-step="rates">
+      <p>A repair forecast, tested on a year it had not seen, shows where each type of repair is heading, and which groups of homes run far above the council rate.</p>
+      <p class="hint" id="hint-rates"></p>
+    </div>
+    <div class="step" data-step="savings">
+      <p>That turns into capital works that pay for themselves: replacing a component where repeated repairs already cost more than a new one, and fixing a problem first time.</p>
+      <p class="hint" id="hint-savings"></p>
     </div>
 
     <div class="step" data-step="eval" id="lvl3">
@@ -252,6 +297,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
 <script src="am_data.js"></script>
+<script src="site_data.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

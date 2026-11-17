@@ -72,6 +72,7 @@ function initDash() {
 function setStageA(step) {
   const st = step === 'count' ? 'chaos' : step;
   $('stageA').dataset.state = st;
+  if (st === 'funnel' || st === 'dash') setTimeout(drawWires, 900);
   const h = A.hook;
   if (step === 'chaos') { countTo(h.repairs_fy[0]); $('counter-sub').textContent = h.fys[0]; }
   if (step === 'count') {
@@ -221,10 +222,115 @@ function revealEval(f) {                  // f: 0…1 across the two evaluation 
   document.querySelectorAll('.check').forEach((c, i) => c.classList.toggle('on', f > .52 + i * .1));
 }
 
+// ════════ Control panel: existing systems → one record per home → the questions it answers ════════
+// Figures from site_data.js (build_site_data.py, from the anonymised demo portal).
+const S = typeof SITE !== 'undefined' ? SITE : null;
+const gbp = v => v >= 1e6 ? '£' + (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? '£' + Math.round(v / 1e3) + 'k' : '£' + Math.round(v);
+const CP_IN = [
+  ['Housing management system', 'stock list, tenancies, voids'], ['Repairs system', 'every work order, home and block'],
+  ['Asset management system', 'stock condition surveys'], ['Damp & mould cases', 'surveyor assessments, HHSRS'],
+  ['National EPC register', 'energy certificates (open data)'], ['Cost schedules', 'unit costs and lifecycles'],
+];
+const CP_OUT = [
+  ['Where to invest more effectively', 'A costed plan by year and home: Decent Homes first, then the work that saves most', 'Asset management · Finance'],
+  ['What trends the data is pointing at', 'Repairs forecast by type and estate; damp and hazards before they return', 'Repairs · Damp & mould · Board'],
+  ['How services can be delivered more impactfully', 'Fix first time, replace instead of patching, survey where the gaps are', 'Operations · Surveyors · Compliance'],
+];
+function initControl() {
+  if (!$('cpanel')) return;
+  $('cp-in').innerHTML = CP_IN.map(([n, s]) => `<div class="cp-src"><b>${n}</b><span>${s}</span></div>`).join('');
+  const h = S ? S.hub : null;
+  $('cp-hub').innerHTML = `<div class="cp-hub-k">Home by Home</div><div class="cp-hub-n">${h ? fmt(h.homes) : ''}</div><div class="cp-hub-s">homes, one joined record each</div>
+    ${h ? `<div class="cp-hub-l"><b>${fmt(h.work_orders)}</b> work orders · <b>${fmt(h.repairs)}</b> repairs</div>` : ''}
+    <div class="cp-hub-l">checked · linked · kept up to date</div>`;
+  $('cp-out').innerHTML = CP_OUT.map(([q, a, t]) => `<div class="cp-q"><b>${q}</b><span>${a}</span><small>${t}</small></div>`).join('');
+}
+function drawWires() {
+  const p = $('cpanel'), svg = $('cp-wires'), hub = $('cp-hub');
+  if (!p || !hub || p.offsetWidth === 0) return;
+  const o = p.getBoundingClientRect(), hb = hub.getBoundingClientRect();
+  const cur = (x1, y1, x2, y2) => { const m = (x1 + x2) / 2; return `M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`; };
+  let d = '';
+  p.querySelectorAll('.cp-src').forEach((e, i, a) => { const r = e.getBoundingClientRect();
+    d += `<path d="${cur(r.right - o.left, r.top + r.height / 2 - o.top, hb.left - o.left, hb.top + hb.height * (.2 + .6 * i / Math.max(a.length - 1, 1)) - o.top)}"/>`; });
+  p.querySelectorAll('.cp-q').forEach((e, i, a) => { const r = e.getBoundingClientRect();
+    d += `<path class="out" d="${cur(hb.right - o.left, hb.top + hb.height * (.25 + .5 * i / Math.max(a.length - 1, 1)) - o.top, r.left - o.left, r.top + r.height / 2 - o.top)}"/>`; });
+  svg.setAttribute('viewBox', `0 0 ${o.width} ${o.height}`); svg.innerHTML = d;
+}
+
+// ════════ Level 1 (end): the investment plan ════════
+function initPlan() {
+  if (!S || !$('plan-bars')) return;
+  const P = S.plan, cols = Object.fromEntries(P.groups), mx = Math.max(...P.years.map(y => Math.max(y.spent, y.due)));
+  $('plan-budget').textContent = `${gbp(P.budget)} a year · ${P.years.length} years`;
+  $('plan-bars').innerHTML = `<div class="pb">${P.years.map(y => `<div class="pb-col" title="${y.fy}: ${gbp(y.spent)} spent · ${gbp(y.due)} of work due">
+      <div class="pb-due" style="bottom:${y.due / mx * 100}%"></div>
+      <div class="pb-stack" style="height:${y.spent / mx * 100}%">${P.groups.map(([g]) => y.by[g] ? `<div style="flex:${y.by[g]};background:${cols[g]}"></div>` : '').join('')}</div>
+      <div class="pb-lab">${y.fy}</div></div>`).join('')}</div>`;
+  $('plan-legend').innerHTML = P.groups.map(([g, c]) => `<span><i style="background:${c}"></i>${g}</span>`).join('') + `<span><i class="dash-i"></i>work falling due (incl. backlog)</span>`;
+  const y0 = P.years[0], y4 = P.years[Math.min(4, P.years.length - 1)];
+  $('hint-plan-years').textContent = `At ${gbp(P.budget)} a year: ${gbp(P.years.reduce((s, y) => s + y.spent, 0))} over ${P.years.length} years, ${fmt(y0.homes)} homes treated in ${y0.fy}, ${y4.decent_pct}% of homes decent by ${y4.fy}.`;
+  drawSankey(P.flow_y0, `${P.years[0].fy}: ${gbp(P.years[0].spent)}`);
+  const top = Object.entries(P.flow_y0).map(([k, g]) => [k, Object.values(g).reduce((s, v) => s + v, 0)]).sort((a, b) => b[1] - a[1]);
+  const tot = top.reduce((s, x) => s + x[1], 0);
+  $('hint-plan-flow').textContent = `In ${P.years[0].fy}: ${top.slice(0, 3).map(([k, v]) => `${k.toLowerCase()} ${Math.round(v / tot * 100)}%`).join(', ')}. After ${P.years.length} years the work avoids ${gbp(P.saving_after)} of repairs a year.`;
+}
+function drawSankey(flow, label) {
+  const P = S.plan, W = 640, H = 300, nodeW = 12, cols = Object.fromEntries(P.groups), rc = Object.fromEntries(P.reasons);
+  const L = Object.entries(flow).map(([k, g]) => [k, Object.values(g).reduce((s, v) => s + v, 0)]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  const Rt = {}; Object.values(flow).forEach(g => Object.entries(g).forEach(([k, v]) => Rt[k] = (Rt[k] || 0) + v));
+  const R = P.groups.map(([g]) => [g, Rt[g] || 0]).filter(x => x[1] > 0);
+  const tot = L.reduce((s, x) => s + x[1], 0), gap = 9;
+  const sc = (H - 30 - gap * (Math.max(L.length, R.length) - 1)) / tot;
+  const place = arr => { let y = 22; return Object.fromEntries(arr.map(([k, v]) => { const n = {y, h: Math.max(2, v * sc), v}; y += n.h + gap; return [k, n]; })); };
+  const LN = place(L), RN = place(R), xL = 178, xR = W - 214;
+  const lo = Object.fromEntries(L.map(([k]) => [k, LN[k].y])), ro = Object.fromEntries(R.map(([k]) => [k, RN[k].y]));
+  let links = '';
+  L.forEach(([k]) => R.forEach(([g]) => { const v = (flow[k] || {})[g]; if (!v) return; const h = v * sc, y1 = lo[k] + h / 2, y2 = ro[g] + h / 2;
+    links += `<path d="M${xL + nodeW},${y1} C${(xL + xR) / 2},${y1} ${(xL + xR) / 2},${y2} ${xR},${y2}" stroke="${rc[k] || '#999'}" stroke-opacity=".28" stroke-width="${h}" fill="none"><title>${esc(k)} → ${esc(g)}: ${gbp(v)}</title></path>`;
+    lo[k] += h; ro[g] += h; }));
+  const lab = (x, y, a, name, sub) => `<text x="${x}" y="${y}" text-anchor="${a}" font-family="DM Sans" font-size="11.5" font-weight="600" fill="#1F2A27">${esc(name)}</text>
+    <text x="${x}" y="${y + 13}" text-anchor="${a}" font-family="DM Sans" font-size="10" fill="#6B716E">${esc(sub)}</text>`;
+  $('plan-svg').innerHTML = `<text x="${xL + nodeW}" y="12" font-family="DM Sans" font-size="10" fill="#6B716E" text-anchor="end" letter-spacing=".06em">WHY IT IS FUNDED</text>
+    <text x="${xR}" y="12" font-family="DM Sans" font-size="10" fill="#6B716E" letter-spacing=".06em">WHAT IT BUYS</text>${links}
+    ${L.map(([k, v]) => `<rect x="${xL}" y="${LN[k].y}" width="${nodeW}" height="${LN[k].h}" fill="${rc[k] || '#999'}"/>${lab(xL - 8, LN[k].y + LN[k].h / 2 - 2, 'end', k, `${gbp(v)} · ${Math.round(v / tot * 100)}%`)}`).join('')}
+    ${(() => { let next = 0; return R.map(([g, v]) => { const o = P.outcome[g] || {};
+      const ly = Math.max(RN[g].y + RN[g].h / 2 - 2, next); next = ly + 28;        // labels of small nodes kept apart
+      return `<rect x="${xR}" y="${RN[g].y}" width="${nodeW}" height="${RN[g].h}" fill="${cols[g]}"/>${lab(xR + nodeW + 8, ly, 'start', `${g} · ${gbp(v)}`, o.saving ? `repairs avoided ${gbp(o.saving)} a year` : '')}`; }).join(''); })()}`;
+  $('plan-flow-title').textContent = `Where the money goes, and what it buys · ${label}`;
+}
+
+// ════════ Level 2 (end): repair rates by component, and the savings capital works bring ════════
+let ratesGroup = 0;
+function initPrevent() {
+  if (!S || !$('rates')) return;
+  const sv = S.savings;
+  $('savings').innerHTML = `<div class="sv-kpis">
+      <div><b>${gbp(sv.value_total)}</b><span>a year of savings identified across the stock</span></div>
+      <div><b>${gbp(sv.return_visits.cost)}</b><span>a year spent on return visits (${fmt(sv.return_visits.repairs)} repairs needed more than one)</span></div></div>
+    <table class="sv-tbl"><tr><th>Replace instead of patching</th><th>Homes</th><th>Cost once</th><th>Repairs avoided</th></tr>
+      ${sv.components.slice(0, 6).map(c => `<tr><td>${esc(c.target)}</td><td>${fmt(c.homes)}</td><td>${gbp(c.cost)}</td><td><b>${gbp(c.annual)}</b> a year</td></tr>`).join('')}</table>
+    <div class="sv-note">Homes with ${sv.repeat_min}+ repairs to the same component, where a new one costs less than continuing to repair it. Once its work is done, the investment plan avoids ${gbp(sv.plan_saving_after)} of repairs a year.</div>`;
+  renderRates();
+  const g = S.rates.groups[0];
+  $('hint-rates').textContent = g ? `${g.name}: ${g.per_home.toFixed(1)} repairs expected per home next year, against ${S.rates.council_per_home.toFixed(1)} across the council.` : '';
+  $('hint-savings').textContent = `${gbp(sv.components.reduce((s, c) => s + c.annual, 0))} a year from ${fmt(sv.components.reduce((s, c) => s + c.homes, 0))} component replacements alone.`;
+}
+function renderRates() {
+  const G = S.rates.groups, g = G[ratesGroup];
+  if (!g) return;
+  const mx = Math.max(...g.types.map(t => t[1]));
+  $('rates').innerHTML = `<div class="rt-tabs">${G.map((x, i) => `<span class="${i === ratesGroup ? 'on' : ''}" onclick="ratesGroup=${i};renderRates()">${esc(x.name.split(' · ')[0])}</span>`).join('')}</div>
+    <div class="rt-name">${esc(g.name)} · ${g.homes} homes · ${fmt(g.expected)} repairs expected</div>
+    ${g.types.map(([t, v, r]) => `<div class="rt-row"><span>${esc(t)}</span><div class="rt-bar"><div style="width:${v / mx * 100}%;background:${r >= 1.5 ? '#C95C3A' : r >= 1 ? '#F2B33D' : '#2E8B67'}"></div></div>
+      <b>${v.toFixed(1)}</b><em class="${r >= 1.5 ? 'hi' : ''}">${r.toFixed(1)}× council rate</em></div>`).join('')}`;
+}
+
 // ════════ Scroll choreography ════════
 
-const PANELS = {'map-base':'p-map','map-red':'p-map','map-amber':'p-map','map-green':'p-map', estate:'p-estate', passport:'p-estate', eval:'p-eval', 'eval-drop':'p-eval'};
-const TABS = {'p-map':'Programme builder', 'p-estate':'Repairs analysis', 'p-eval':'Retrofit evaluation'};
+const PANELS = {'map-base':'p-map','map-red':'p-map','map-amber':'p-map','map-green':'p-map', 'plan-years':'p-plan', 'plan-flow':'p-plan',
+                estate:'p-estate', passport:'p-estate', rates:'p-prevent', savings:'p-prevent', eval:'p-eval', 'eval-drop':'p-eval'};
+const TABS = {'p-map':'Programme builder', 'p-plan':'Investment plan', 'p-estate':'Repairs analysis', 'p-prevent':'Repair forecast & value', 'p-eval':'Retrofit evaluation'};
 
 function setStateB(step) {
   const pid = PANELS[step];
@@ -234,6 +340,8 @@ function setStateB(step) {
   const lv = {'map-base': 0, 'map-red': 1, 'map-amber': 2, 'map-green': 3}[step];
   if (lv != null) setMapLevel(lv);
   if (pid === 'p-estate') growBars();
+  if (pid === 'p-plan') $('p-plan').dataset.view = step;
+  if (pid === 'p-prevent') $('p-prevent').dataset.view = step;
   if (step === 'passport') { const rows = document.querySelectorAll('.eb-row'); showPassport(+rows[Math.min(1, rows.length - 1)].dataset.i); }
 }
 
@@ -288,10 +396,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initMap();
   initEstate();
   initEval();
+  initControl();
+  initPlan();
+  initPrevent();
   initBooking();
   new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); o.disconnect(); } }),
     {threshold: .25}).observe($('results'));
   initScroll();
   initXlink();
-  window.addEventListener('resize', () => amMap && amMap.invalidateSize());
+  window.addEventListener('resize', () => { amMap && amMap.invalidateSize(); drawWires(); });
 });

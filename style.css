@@ -276,3 +276,74 @@ b{font-weight:600}
   *,*::before,*::after{animation:none!important;transition:none!important}
   html{scroll-behavior:auto}
 }
+
+/* ═══════ Control panel (replaces the engine + dashboard at "An analysis layer") ═══════ */
+.stage[data-state="funnel"] .engine,.stage[data-state="dash"] .engine,.stage[data-state="dash"] .dash{opacity:0!important;pointer-events:none}
+.cpanel{position:absolute;left:41%;right:3vw;top:50%;transform:translate(40px,-50%);opacity:0;transition:opacity .8s ease .5s,transform .9s cubic-bezier(.2,.7,.2,1) .5s;
+  display:grid;grid-template-columns:1fr minmax(150px,.8fr) 1.15fr;gap:34px;align-items:center;font-family:'DM Sans',sans-serif}
+.stage[data-state="funnel"] .cpanel,.stage[data-state="dash"] .cpanel{opacity:1;transform:translate(0,-50%)}
+.cp-col{position:relative;z-index:1;display:flex;flex-direction:column;gap:7px}
+.cp-h{font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dg-lime);margin-bottom:2px}
+.cp-src{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:7px 10px}
+.cp-src b{display:block;font-size:12.5px;font-weight:600;color:#fff;line-height:1.25}
+.cp-src span{font-size:10.5px;color:rgba(255,255,255,.65)}
+.cp-hub{background:var(--dg-lime);color:var(--dg-green);border-radius:16px;padding:16px 14px;text-align:center;box-shadow:0 0 60px rgba(207,239,108,.35)}
+.cp-hub-k{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.cp-hub-n{font-size:30px;font-weight:700;line-height:1.1;font-family:'Poppins',sans-serif}
+.cp-hub-s{font-size:11px;margin-bottom:8px}
+.cp-hub-l{font-size:10.5px;border-top:1px solid rgba(3,83,65,.18);padding-top:5px;margin-top:5px}
+.cp-q{background:#fff;color:var(--ink);border-radius:12px;padding:9px 12px;border-left:4px solid var(--dg-lime);transition:transform .4s,box-shadow .4s}
+.cp-q b{display:block;font-size:13px;color:var(--dg-green);line-height:1.25}
+.cp-q span{display:block;font-size:11px;color:var(--muted);line-height:1.35;margin-top:2px}
+.cp-q small{display:block;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dg-green-2);margin-top:4px}
+.stage[data-state="dash"] .cp-q{transform:translateX(-6px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.stage[data-state="funnel"] .cp-out{opacity:.55}
+.cp-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.cp-wires path{fill:none;stroke:rgba(207,239,108,.45);stroke-width:1.4}
+.cp-wires path.out{stroke:rgba(207,239,108,.75);stroke-width:2}
+@media (max-width:900px){.cpanel{left:4vw;right:4vw;grid-template-columns:1fr;gap:10px;top:auto;bottom:4vh;transform:none}.cp-in{display:none}.cp-wires{display:none}}
+
+/* ═══════ Level 1 end: investment plan ═══════ */
+.plan{position:absolute;inset:0;display:grid}
+.plan .card{position:absolute;inset:0;transition:opacity .5s,transform .6s}
+#p-plan[data-view="plan-years"] .plan-flow,#p-plan:not([data-view]) .plan-flow{opacity:0;transform:translateY(16px);pointer-events:none}
+#p-plan[data-view="plan-flow"] .plan-years{opacity:0;transform:translateY(-16px);pointer-events:none}
+#plan-bars{height:calc(100% - 64px)}
+.pb{display:flex;align-items:flex-end;gap:6px;height:100%;min-height:200px;padding-top:10px;box-sizing:border-box}
+.pb-col{padding-bottom:18px;box-sizing:border-box}
+.pb-lab{position:absolute;bottom:0;left:0;right:0}
+.pb-col{flex:1;position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.pb-stack{display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden;min-height:2px}
+.pb-due{position:absolute;left:0;right:0;border-top:2px dashed #1F2A27;opacity:.55}
+.pb-lab{font-size:9.5px;color:var(--text-muted);text-align:center;margin-top:4px;font-family:'DM Sans',sans-serif}
+.dash-i{border-top:2px dashed #1F2A27;height:0!important;width:14px!important;border-radius:0!important;background:none!important}
+#plan-svg{width:100%;height:calc(100% - 26px)}
+
+/* ═══════ Level 2 end: repair rates and savings ═══════ */
+.prevent{position:absolute;inset:0;display:grid}
+.prevent .card{position:absolute;inset:0;transition:opacity .5s,transform .6s;overflow:auto}
+#p-prevent[data-view="rates"] .prev-save,#p-prevent:not([data-view]) .prev-save{opacity:0;transform:translateY(16px);pointer-events:none}
+#p-prevent[data-view="savings"] .prev-rates{opacity:0;transform:translateY(-16px);pointer-events:none}
+.rt-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.rt-tabs span{font-size:11px;padding:3px 11px;border-radius:14px;border:1px solid var(--dg-green-2);color:var(--dg-green-2);cursor:pointer;font-family:'DM Sans',sans-serif}
+.rt-tabs span.on{background:var(--dg-green);color:#fff;border-color:var(--dg-green)}
+.rt-name{font-size:12px;font-weight:600;color:var(--dg-green);margin-bottom:10px;font-family:'DM Sans',sans-serif}
+.rt-row{display:grid;grid-template-columns:130px 1fr 40px 120px;gap:8px;align-items:center;font-size:12px;margin:7px 0;font-family:'DM Sans',sans-serif}
+.rt-bar{height:12px;background:#F1EEE9;border-radius:4px;overflow:hidden}.rt-bar div{height:100%;border-radius:4px}
+.rt-row b{text-align:right}.rt-row em{font-style:normal;font-size:11px;color:var(--muted)}.rt-row em.hi{color:#C95C3A;font-weight:600}
+.sv-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;font-family:'DM Sans',sans-serif}
+.sv-kpis div{background:var(--green-pale,#E8F4EE);border-radius:10px;padding:10px 12px}
+.sv-kpis b{display:block;font-size:24px;color:var(--dg-green);font-family:'Poppins',sans-serif;line-height:1.1}
+.sv-kpis span{font-size:11px;color:var(--muted)}
+.sv-tbl{width:100%;border-collapse:collapse;font-size:12px;font-family:'DM Sans',sans-serif}
+.sv-tbl th{background:var(--dg-green);color:#fff;text-align:left;padding:6px 8px;font-weight:500;font-size:11px}
+.sv-tbl td{padding:6px 8px;border-bottom:1px solid #ECE8E1}
+.sv-note{font-size:10.5px;color:var(--muted);margin-top:8px;font-family:'DM Sans',sans-serif}
+@media (max-width:900px){.rt-row{grid-template-columns:96px 1fr 34px}.rt-row em{display:none}}
+.prevent .card{display:flex;flex-direction:column}
+#rates,#savings{margin:auto 0;padding:0 1%}
+.rt-row{grid-template-columns:150px 1fr 48px 140px;font-size:14px;margin:11px 0}
+.rt-bar{height:16px}
+.rt-name{font-size:14px;margin-bottom:14px}
+.sv-tbl{font-size:13.5px}.sv-tbl td{padding:9px 10px}
+.sv-kpis b{font-size:30px}
